@@ -14,12 +14,16 @@ function Vessel:init(points, interval, sandAmount)
     self.points = points
     self.sprites = {}
     self.interval = interval
-    GenerateEdges(self)
+    --GenerateEdges(self)
 
     self.polygon = geo.polygon.new(table.unpack(self.points))
     self.polygon:close()
     self.sandList = {}
     SpawnSand(self, sandAmount)
+end
+
+function DrawVessel(self)
+    gfx.drawPolygon(self.polygon)
 end
 
 function GenerateEdges(self)
