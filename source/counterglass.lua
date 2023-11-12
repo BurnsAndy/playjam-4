@@ -15,6 +15,7 @@ function Counterglass.new()
   self.score = 0
   self.gameOver = true
   self.gameOverTimer = 0
+  self.gameOverText = "Press A to Start"
   self.modifiers = {
     heavy = false,
     reverse = false
@@ -116,6 +117,8 @@ function Counterglass:CheckGameOver()
 
     if self.gameOverTimer >= 30 then
       gfx.clear()
+      self.sprite:remove()
+      self.gameOverText = "GAME OVER\n\nPress A to Try Again"
       self.gameOver = true
     end
   end
@@ -128,6 +131,7 @@ function Counterglass:NewGame()
   self.topCounter = 100
   self.bottomCounter = 0
   self.flowRate = 0
+  self:initGfx()
 end
 
 function Counterglass:CurrentModfiers()

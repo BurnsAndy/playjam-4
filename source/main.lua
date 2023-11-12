@@ -2,6 +2,7 @@ import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
+import "CoreLibs/ui"
 import "hourglass"
 import "vessel"
 import "counterglass"
@@ -29,8 +30,10 @@ counterglass:initGfx()
 
 function pd.update()
   gfx.sprite.update()
-
+  
   if not counterglass.gameOver then
+    if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
+
     --0.1% chance to trigger a modifier
     if triggerModifierRandomly(2) then
       reverseOn = true
@@ -60,17 +63,14 @@ function pd.update()
     end
 
     counterglass:update(reverseOn, heavyOn)
-    --counterglass:debugLog(reverseOn, heavyOn)
-
-    --gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
   else
-    gfx.drawTextAligned("Press A to Start", pd.display.getWidth() /2, pd.display.getHeight() / 2, kTextAlignment.center)
+    gfx.drawTextAligned(counterglass.gameOverText, pd.display.getWidth() /2, pd.display.getHeight() / 2, kTextAlignment.center)
     if pd.buttonJustPressed ( pd.kButtonA ) then counterglass:NewGame() end
   end
 
   
   gfx.drawText("Score: " .. math.floor(counterglass.score), 1, 1)
   
-  gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
+  --gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
 
 end
