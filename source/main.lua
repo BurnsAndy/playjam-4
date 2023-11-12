@@ -10,7 +10,7 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local p <const> = pd.geometry.point
 
-math.randomseed(playdate.getSecondsSinceEpoch())
+math.randomseed(pd.getSecondsSinceEpoch())
 
 function triggerModifierRandomly(percent)
   return percent >= math.random(1, 1000)
@@ -23,6 +23,9 @@ local reverseTimer = 150
 local heavyTimer = 150
 
 local counterglass = Counterglass.new()
+counterglass:initGfx()
+
+
 
 function pd.update()
   -- 0.1% chance to trigger a modifier
@@ -49,6 +52,9 @@ function pd.update()
     end
   end
 
+  gfx.sprite.update()
   counterglass:update(playdate.getCrankPosition(), reverseOn, heavyOn)
-  counterglass:display(reverseOn, heavyOn)
+  --counterglass:debugLog(reverseOn, heavyOn)
+
+  gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
 end
