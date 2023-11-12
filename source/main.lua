@@ -10,25 +10,45 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local p <const> = pd.geometry.point
 
--- vessel = Vessel({
---     p.new(10,10),
---     p.new(200, 100),
---     p.new(390,10),
---     p.new(390,230),
---     p.new(200, 140),
---     p.new(10,230)
---     },
---     1,
---     50)
+math.randomseed(playdate.getSecondsSinceEpoch())
 
--- pd.startAccelerometer()
+function triggerModifierRandomly(percent)
+  return percent >= math.random(1, 1000)
+end
+
+local reverseOn = false
+local heavyOn = false
+-- 30 fps, 150 frames = 5 seconds
+local reverseTimer = 150
+local heavyTimer = 150
 
 local counterglass = Counterglass.new()
 
 function pd.update()
-  -- gfx.sprite.update()
-  -- DrawVessel(vessel)
-  -- pd.drawFPS(5, 5)
-  counterglass:update(playdate.getCrankPosition())
-  counterglass:display()
+  -- 0.1% chance to trigger a modifier
+  if triggerModifierRandomly(2) then
+    reverseOn = true
+  end
+  if reverseOn then
+    reverseTimer = reverseTimer - 1
+    if reverseTimer <= 0 then
+      reverseOn = false
+      reverseTimer = 150
+    end
+  end
+
+  -- 0.1% chance to trigger a modifier
+  if triggerModifierRandomly(2) then
+    heavyOn = true
+  end
+  if heavyOn then
+    heavyTimer = heavyTimer - 1
+    if heavyTimer <= 0 then
+      heavyOn = false
+      heavyTimer = 150
+    end
+  end
+
+  counterglass:update(playdate.getCrankPosition(), reverseOn, heavyOn)
+  counterglass:display(reverseOn, heavyOn)
 end

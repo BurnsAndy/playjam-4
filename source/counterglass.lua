@@ -24,18 +24,33 @@ function Counterglass:getFlowRate(orientation)
 end
 
 -- Method to update the counters based on the current orientation
-function Counterglass:update(orientation)
+function Counterglass:update(orientation, reverse, heavy)
   self.flowRate = self:getFlowRate(orientation)
-  local flowAmount = self.flowRate * 0.5
 
-  -- Ensure flow does not exceed remaining sand
-  flowAmount = math.min(math.max(flowAmount, -self.bottomCounter), self.topCounter)
+  -- Heavy sand flows at twice the rate of normal sand
+  local flowModifier = 0.5
+  if heavy then
+    flowModifier = 1
+  end
+  local flowAmount = self.flowRate * flowModifier
 
-  self.topCounter = self.topCounter - flowAmount
-  self.bottomCounter = self.bottomCounter + flowAmount
+  if reverse then
+    -- Ensure flow does not exceed remaining sand
+    flowAmount = math.min(math.max(flowAmount, -self.topCounter), self.bottomCounter)
+    self.topCounter = self.topCounter + flowAmount
+    self.bottomCounter = self.bottomCounter - flowAmount
+  else
+    flowAmount = math.min(math.max(flowAmount, -self.bottomCounter), self.topCounter)
+    self.topCounter = self.topCounter - flowAmount
+    self.bottomCounter = self.bottomCounter + flowAmount
+  end
 end
 
 -- Method to display the current state of the hourglass
-function Counterglass:display()
-  print("Top: " .. self.topCounter .. ", Bottom: " .. self.bottomCounter .. ", Flow: " .. self.flowRate)
+function Counterglass:display(reverse, heavy)
+  print("Top: " ..
+    self.topCounter ..
+    ", Bottom: " ..
+    self.bottomCounter ..
+    ", Flow: " .. self.flowRate .. ", Reverse: " .. tostring(reverse) .. ", Heavy: " .. tostring(heavy))
 end
