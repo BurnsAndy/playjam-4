@@ -202,10 +202,11 @@ function Counterglass:ManageModifiers()
   for modifier, _ in pairs(self.modifiers) do
     --0.2% chance to trigger a modifier
     if triggerModifierRandomly(3) then
-      self.modifiers[modifier] = true
-
-      local modAdded = pd.sound.fileplayer.new("sounds/modAdded")
-      modAdded:play()
+      if(not self.modifiers[modifier]) then
+        self.modifiers[modifier] = true
+        local modAdded = pd.sound.fileplayer.new("sounds/modAdded")
+        modAdded:play()
+      end
     end
 
     -- Decrement modifier timers, reset state when timer runs out
