@@ -14,19 +14,8 @@ local s <const> = playdate.sound
 
 math.randomseed(pd.getSecondsSinceEpoch())
 
-function triggerModifierRandomly(percent)
-  return percent >= math.random(1, 1000)
-end
-
-local reverseOn = false
-local heavyOn = false
--- 30 fps, 150 frames = 5 seconds
-local reverseTimer = 150
-local heavyTimer = 150
-
 local counterglass = Counterglass.new()
 counterglass:initGfx()
-
 
 local bMusic = true
 
