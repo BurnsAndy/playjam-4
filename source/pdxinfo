@@ -1,7 +1,7 @@
 name=Counterglass
 author=Andy, Jerry, and Matt
 description=The world's only game with music in 69/16
-bundleID=com.organization.package
-version=1.0.0
-buildNumber=1
+bundleID=com.andyjerrymatt.counterglass
+version=1.0.1
+buildNumber=2
 imagePath=images/
