@@ -120,6 +120,9 @@ function Counterglass:CheckGameOver()
       self.sprite:remove()
       self.gameOverText = "GAME OVER\n\nPress A to Try Again"
       self.gameOver = true
+
+      local loser = pd.sound.fileplayer.new("sounds/uLose")
+      loser:play()
     end
   end
 end

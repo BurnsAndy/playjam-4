@@ -10,6 +10,7 @@ import "counterglass"
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 local p <const> = pd.geometry.point
+local s <const> = playdate.sound
 
 math.randomseed(pd.getSecondsSinceEpoch())
 
@@ -27,10 +28,17 @@ local counterglass = Counterglass.new()
 counterglass:initGfx()
 
 
+local bMusic = true
 
 function pd.update()
   gfx.sprite.update()
-  
+    
+  if(bMusic) then
+    bMusic = false
+    local fileplayer = s.fileplayer.new("sounds/69")
+    fileplayer:play()
+  end
+
   if not counterglass.gameOver then
     if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
 
