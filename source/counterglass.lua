@@ -58,7 +58,7 @@ function Counterglass:update()
   -- Turn modifiers on and off
   self:ManageModifiers()
 
-  -- Set crank rate
+-- Set crank rate
   local crankRate = 1
   local fuckValue = 0
   if self.modifiers["fuck"] then
@@ -203,6 +203,9 @@ function Counterglass:ManageModifiers()
     --0.2% chance to trigger a modifier
     if triggerModifierRandomly(3) then
       self.modifiers[modifier] = true
+
+      local modAdded = pd.sound.fileplayer.new("sounds/modAdded")
+      modAdded:play()
     end
 
     -- Decrement modifier timers, reset state when timer runs out
@@ -212,6 +215,9 @@ function Counterglass:ManageModifiers()
       if self.modifierTimers[modifier] <= 0 then
         self.modifiers[modifier] = false
         self.modifierTimers[modifier] = 150
+
+        local modRemoved = pd.sound.fileplayer.new("sounds/modRemoved")
+        modRemoved:play()
       end
     end
   end
