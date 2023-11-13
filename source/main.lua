@@ -36,8 +36,8 @@ function pd.update()
     end
     counterglass:DrawScore()
   else
-    if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
-    gfx.drawTextAligned("Press A to Start", pd.display.getWidth() /2, 210, kTextAlignment.center)
+    if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw(0,-180) end
+    gfx.drawTextAligned("Your time is up! Don't let the hourglass run out.\nPress A to Start.", pd.display.getWidth() /2, 200, kTextAlignment.center)
     if pd.buttonJustPressed ( pd.kButtonA ) then counterglass = title:StartGame(counterglass) end
   end
 end
