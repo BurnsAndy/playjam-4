@@ -167,7 +167,8 @@ function Counterglass:SaveHighScore()
 end
 
 function Counterglass:RetrieveHighScore()
-  self.highScore = pd.datastore.read().highScore or 0
+  local datastore = pd.datastore.read()
+  self.highScore = datastore and datastore.highScore or 0
 end
 
 function Counterglass:DrawScore()
