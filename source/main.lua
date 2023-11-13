@@ -25,7 +25,7 @@ function pd.update()
   if (bMusic) then
     bMusic = false
     local fileplayer = s.fileplayer.new("sounds/69")
-    fileplayer:play()
+    fileplayer:play(0)
   end
 
   if not counterglass.gameOver then
