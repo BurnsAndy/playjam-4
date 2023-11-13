@@ -31,46 +31,14 @@ function pd.update()
   gfx.sprite.update()
 
   if not counterglass.gameOver then
-    --0.1% chance to trigger a modifier
-    if triggerModifierRandomly(2) then
-      reverseOn = true
-      counterglass.modifiers["reverse"] = true
-    end
-    if reverseOn then
-      reverseTimer = reverseTimer - 1
-      if reverseTimer <= 0 then
-        counterglass.modifiers["reverse"] = false
-        reverseOn = false
-        reverseTimer = 150
-      end
-    end
-
-    -- 0.1% chance to trigger a modifier
-    if triggerModifierRandomly(2) then
-      counterglass.modifiers["heavy"] = true
-      heavyOn = true
-    end
-    if heavyOn then
-      heavyTimer = heavyTimer - 1
-      if heavyTimer <= 0 then
-        counterglass.modifiers["heavy"] = false
-        heavyOn = false
-        heavyTimer = 150
-      end
-    end
-
-    counterglass:update(reverseOn, heavyOn)
-    --counterglass:debugLog(reverseOn, heavyOn)
-
-    --gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
+    counterglass:update()
   else
-    gfx.drawTextAligned("Press A to Start", pd.display.getWidth() /2, pd.display.getHeight() / 2, kTextAlignment.center)
-    if pd.buttonJustPressed ( pd.kButtonA ) then counterglass:NewGame() end
+    gfx.drawTextAligned("Press A to Start", pd.display.getWidth() / 2, pd.display.getHeight() / 2, kTextAlignment.center)
+    if pd.buttonJustPressed(pd.kButtonA) then counterglass:NewGame() end
   end
 
-  
-  gfx.drawText("Score: " .. math.floor(counterglass.score), 1, 1)
-  
-  gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
 
+  gfx.drawText("Score: " .. math.floor(counterglass.score), 1, 1)
+
+  -- gfx.drawText(counterglass:debugString(true), 0, 0)
 end
