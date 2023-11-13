@@ -26,9 +26,9 @@ function pd.update()
   else
     counterglass:DrawGameOverText()
     if pd.buttonJustPressed(pd.kButtonA) then counterglass:NewGame() end
-    if pd.buttonJustPressed(pd.kButtonB) then counterglass.highScore = 0 end --debug
+    if pd.buttonJustPressed(pd.kButtonB) then counterglass.highScore = 0 end
   end
 
   counterglass:DrawScore()
-  -- gfx.drawText(counterglass:debugString(true),0,0)
+  gfx.drawText(counterglass:debugString(true), 2, 120)
 end

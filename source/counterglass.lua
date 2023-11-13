@@ -39,11 +39,15 @@ end
 
 -- Method to calculate flow rate based on orientation
 function Counterglass:getFlowRate(orientation)
-  local normalizedAngle = math.rad(orientation % 180)
+  local normalizedAngle = math.rad(orientation)
   local flowRate = math.cos(normalizedAngle)
 
-  if orientation >= 180 and orientation <= 360 then
-    flowRate = -flowRate
+  -- As score gets higher, flow rate gets faster so it's harder
+  local scoreModifier = 0.1 * (self.score // 400)
+  if flowRate > 0 then
+    flowRate += scoreModifier
+  else
+    flowRate -= scoreModifier
   end
 
   return flowRate
@@ -106,14 +110,9 @@ function Counterglass:debugString(seperateLines)
   return "Top: " .. self.topCounter .. (seperateLines and "\n" or ", ") ..
       "Bottom: " .. self.bottomCounter .. (seperateLines and "\n" or ", ") ..
       "Flow: " .. self.flowRate .. (seperateLines and "\n" or ", ") ..
-      "Reverse: " .. tostring(self.modifiers["reverse"]) .. (seperateLines and "\n" or ", ") ..
-      "Heavy: " .. tostring(self.modifiers["heavy"]) .. (seperateLines and "\n" or ", ") ..
-      "Doublecrank: " .. tostring(self.modifiers["doublecrank"]) .. (seperateLines and "\n" or ", ") ..
-      "Halfcrank: " .. tostring(self.modifiers["halfcrank"]) .. (seperateLines and "\n" or ", ") ..
-      "Fuck: " .. tostring(self.modifiers["fuck"]) .. (seperateLines and "\n" or ", ") ..
-      "gameOver: " .. tostring(self.gameOver) .. (seperateLines and "\n" or ", ") ..
-      "gameOverTimer: " .. tostring(self.gameOverTimer) .. (seperateLines and "\n" or ", ") ..
-      "orientation: " .. tostring(self.orientation)
+      "GO: " .. tostring(self.gameOver) .. (seperateLines and "\n" or ", ") ..
+      "GOT: " .. tostring(self.gameOverTimer) .. (seperateLines and "\n" or ", ") ..
+      "Orient: " .. tostring(self.orientation)
 end
 
 function Counterglass:DrawCounterglass()
@@ -189,7 +188,7 @@ function Counterglass:CurrentModfiers()
       (self.modifiers["reverse"] and "REVERSE\n" or "") ..
       (self.modifiers["doublecrank"] and "DOUBLECRANK\n" or "") ..
       (self.modifiers["halfcrank"] and "HALFCRANK\n" or "") ..
-      (self.modifiers["fuck"] and "F#!K\n" or "")
+      (self.modifiers["fuck"] and "F#&K\n" or "")
 end
 
 function triggerModifierRandomly(percent)
@@ -199,7 +198,7 @@ end
 function Counterglass:ManageModifiers()
   for modifier, _ in pairs(self.modifiers) do
     --0.2% chance to trigger a modifier
-    if triggerModifierRandomly(2) then
+    if triggerModifierRandomly(3) then
       self.modifiers[modifier] = true
     end
 
