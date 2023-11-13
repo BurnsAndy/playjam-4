@@ -13,8 +13,10 @@ function Counterglass.new()
   self.flowRate = 0
   self.sprite = nil
   self.score = 0
+  self.highScore = 0
   self.gameOver = true
   self.gameOverTimer = 0
+  self.gameOverText = "Press A to Start"
   self.modifiers = {
     heavy = false,
     reverse = false,
@@ -22,6 +24,7 @@ function Counterglass.new()
     halfcrank = false,
     fuck = false
   }
+  -- 30 fps, 150 frames = 5 seconds
   self.modifierTimers = {
     heavy = 150,
     reverse = 150,
@@ -30,6 +33,7 @@ function Counterglass.new()
     fuck = 150
   }
   self.orientation = 0
+  self:RetrieveHighScore()
   return self
 end
 
@@ -146,6 +150,15 @@ function Counterglass:CheckGameOver()
 
     if self.gameOverTimer >= 30 then
       gfx.clear()
+
+      self.sprite:remove()
+      self.gameOverText = "GAME OVER\n" ..
+          ((math.floor(self.score) > self.highScore) and "\nNew High Score!\n" or "") ..
+          "\nPress A to Try Again"
+      if math.floor(self.score) > self.highScore then
+        self.highScore = self.score
+        self:SaveHighScore()
+      end
       self.gameOver = true
     end
   end
@@ -158,6 +171,16 @@ function Counterglass:NewGame()
   self.topCounter = 100
   self.bottomCounter = 0
   self.flowRate = 0
+  self.orientation = 0
+  self:ClearModfiers()
+  self:initGfx()
+end
+
+function Counterglass:ClearModfiers()
+  for modifier, _ in pairs(self.modifiers) do
+    self.modifiers[modifier] = false
+    self.modifierTimers[modifier] = 150
+  end
 end
 
 function Counterglass:CurrentModfiers()
@@ -190,4 +213,24 @@ function Counterglass:ManageModifiers()
       end
     end
   end
+end
+
+function Counterglass:DrawGameOverText()
+  local _, lineCount = self.gameOverText:gsub("\n", "\n")
+  gfx.drawTextAligned(self.gameOverText, pd.display.getWidth() / 2,
+    (pd.display.getHeight() - lineCount * gfx.getFont():getHeight()) / 2, kTextAlignment.center)
+end
+
+function Counterglass:SaveHighScore()
+  pd.datastore.write({ highScore = self.highScore })
+end
+
+function Counterglass:RetrieveHighScore()
+  local datastore = pd.datastore.read()
+  self.highScore = datastore and datastore.highScore or 0
+end
+
+function Counterglass:DrawScore()
+  gfx.drawText("Score: " .. math.floor(self.score), 5, 1)
+  gfx.drawTextAligned("High Score: " .. math.floor(self.highScore), 395, 1, kTextAlignment.right)
 end
