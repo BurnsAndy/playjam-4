@@ -16,6 +16,7 @@ math.randomseed(pd.getSecondsSinceEpoch())
 local counterglass = nil
 local bMusic = true
 local title = Title()
+local crankChange = 0
 
 function pd.update()
   gfx.sprite.update()
@@ -38,6 +39,7 @@ function pd.update()
     counterglass:DrawScore()
   else
     if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw(0,-180) end
+    title:setRotation(title:getRotation() + pd.getCrankChange())
     gfx.drawTextAligned("Your time is up! Don't let the hourglass run out.\nPress A to Start.", pd.display.getWidth() /2, 200, kTextAlignment.center)
     if pd.buttonJustPressed ( pd.kButtonA ) then counterglass = title:StartGame(counterglass) end
   end
