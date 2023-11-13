@@ -3,9 +3,8 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/ui"
-import "hourglass"
-import "vessel"
 import "counterglass"
+import "title"
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
@@ -14,10 +13,9 @@ local s <const> = playdate.sound
 
 math.randomseed(pd.getSecondsSinceEpoch())
 
-local counterglass = Counterglass.new()
-counterglass:initGfx()
-
+local counterglass = nil
 local bMusic = true
+local title = Title()
 
 function pd.update()
   gfx.sprite.update()
@@ -28,17 +26,18 @@ function pd.update()
     fileplayer:play(0)
   end
 
-  if not counterglass.gameOver then
-    if (pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
-    counterglass:update()
+  if counterglass ~= nil then
+    if not counterglass.gameOver then
+      if (pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
+      counterglass:update()
+    else
+      counterglass:DrawGameOverText()
+      if pd.buttonJustPressed(pd.kButtonA) then counterglass:NewGame() end
+    end
+    counterglass:DrawScore()
   else
-    gfx.drawTextAligned(counterglass.gameOverText, pd.display.getWidth() / 2, pd.display.getHeight() / 2,
-      kTextAlignment.center)
-    if pd.buttonJustPressed(pd.kButtonA) then counterglass:NewGame() end
+    if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
+    gfx.drawTextAligned("Press A to Start", pd.display.getWidth() /2, 210, kTextAlignment.center)
+    if pd.buttonJustPressed ( pd.kButtonA ) then counterglass = title:StartGame(counterglass) end
   end
-
-
-  gfx.drawText("Score: " .. math.floor(counterglass.score), 1, 1)
-
-  -- gfx.drawText(counterglass:debugString(true),0,0)
 end

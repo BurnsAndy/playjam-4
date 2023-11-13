@@ -94,7 +94,7 @@ function Counterglass:update()
   end
 
   self.score += math.abs(flowAmount)
-  gfx.drawText(self:CurrentModfiers(), 1, 16)
+  gfx.drawText(self:CurrentModfiers(), 5, 18)
   self.sprite:setRotation(self.orientation)
   self:DrawCounterglass()
   self:CheckGameOver()
