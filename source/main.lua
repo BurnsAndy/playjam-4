@@ -10,25 +10,35 @@ import "counterglass"
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 local p <const> = pd.geometry.point
+local s <const> = playdate.sound
 
 math.randomseed(pd.getSecondsSinceEpoch())
 
 local counterglass = Counterglass.new()
 counterglass:initGfx()
 
+local bMusic = true
+
 function pd.update()
   gfx.sprite.update()
 
-  if not counterglass.gameOver then
-    if (pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
-
-    counterglass:update()
-  else
-    counterglass:DrawGameOverText()
-    if pd.buttonJustPressed(pd.kButtonA) then counterglass:NewGame() end
-    if pd.buttonJustPressed(pd.kButtonB) then counterglass.highScore = 0 end
+  if (bMusic) then
+    bMusic = false
+    local fileplayer = s.fileplayer.new("sounds/69")
+    fileplayer:play()
   end
 
-  counterglass:DrawScore()
-  gfx.drawText(counterglass:debugString(true), 2, 120)
+  if not counterglass.gameOver then
+    if (pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
+    counterglass:update()
+  else
+    gfx.drawTextAligned(counterglass.gameOverText, pd.display.getWidth() / 2, pd.display.getHeight() / 2,
+      kTextAlignment.center)
+    if pd.buttonJustPressed(pd.kButtonA) then counterglass:NewGame() end
+  end
+
+
+  gfx.drawText("Score: " .. math.floor(counterglass.score), 1, 1)
+
+  -- gfx.drawText(counterglass:debugString(true),0,0)
 end

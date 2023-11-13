@@ -159,6 +159,9 @@ function Counterglass:CheckGameOver()
         self:SaveHighScore()
       end
       self.gameOver = true
+
+      local loser = pd.sound.fileplayer.new("sounds/uLose")
+      loser:play()
     end
   end
 end
