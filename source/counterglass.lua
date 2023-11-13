@@ -13,6 +13,7 @@ function Counterglass.new()
   self.flowRate = 0
   self.sprite = nil
   self.score = 0
+  self.highScore = 0
   self.gameOver = true
   self.gameOverTimer = 0
   self.gameOverText = "Press A to Start"
@@ -21,6 +22,7 @@ function Counterglass.new()
     reverse = false
   }
   self.orientation = 0
+  self:RetrieveHighScore()
   return self
 end
 
@@ -117,8 +119,15 @@ function Counterglass:CheckGameOver()
 
     if self.gameOverTimer >= 30 then
       gfx.clear()
+      
       self.sprite:remove()
-      self.gameOverText = "GAME OVER\n\nPress A to Try Again"
+      self.gameOverText = "GAME OVER\n" ..
+      ((math.floor(self.score) > self.highScore) and "\nNew High Score!\n" or "") .. 
+      "\nPress A to Try Again"
+      if math.floor(self.score) > self.highScore then
+        self.highScore = self.score
+        self:SaveHighScore()
+      end
       self.gameOver = true
     end
   end
@@ -131,11 +140,37 @@ function Counterglass:NewGame()
   self.topCounter = 100
   self.bottomCounter = 0
   self.flowRate = 0
+  self.orientation = 0
+  self:ClearModfiers()
   self:initGfx()
+end
+
+function Counterglass:ClearModfiers()
+  for i=1, #self.modifiers do
+    self.modifiers[i] = false
+  end
 end
 
 function Counterglass:CurrentModfiers()
   return 
     (self.modifiers["heavy"] and "HEAVY\n" or "") ..
     (self.modifiers["reverse"] and "REVERSE\n" or "") 
+end
+
+function Counterglass:DrawGameOverText()
+  local _, lineCount = self.gameOverText:gsub("\n","\n")
+  gfx.drawTextAligned(self.gameOverText, pd.display.getWidth() /2, (pd.display.getHeight() - lineCount * gfx.getFont():getHeight())/2, kTextAlignment.center)
+end
+
+function Counterglass:SaveHighScore()
+  pd.datastore.write({highScore = self.highScore})
+end
+
+function Counterglass:RetrieveHighScore()
+  self.highScore = pd.datastore.read().highScore or 0
+end
+
+function Counterglass:DrawScore()
+  gfx.drawText("Score: " .. math.floor(self.score), 5, 1)
+  gfx.drawTextAligned("High Score: " .. math.floor(self.highScore), 395, 1, kTextAlignment.right)
 end

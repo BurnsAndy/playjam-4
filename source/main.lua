@@ -30,7 +30,7 @@ counterglass:initGfx()
 
 function pd.update()
   gfx.sprite.update()
-  
+
   if not counterglass.gameOver then
     if(pd.isCrankDocked()) then pd.ui.crankIndicator:draw() end
 
@@ -64,13 +64,12 @@ function pd.update()
 
     counterglass:update(reverseOn, heavyOn)
   else
-    gfx.drawTextAligned(counterglass.gameOverText, pd.display.getWidth() /2, pd.display.getHeight() / 2, kTextAlignment.center)
+    counterglass:DrawGameOverText()
     if pd.buttonJustPressed ( pd.kButtonA ) then counterglass:NewGame() end
+    if pd.buttonJustPressed ( pd.kButtonB ) then counterglass.highScore = 0 end --debug
   end
 
-  
-  gfx.drawText("Score: " .. math.floor(counterglass.score), 1, 1)
-  
+  counterglass:DrawScore()
   --gfx.drawText(counterglass:debugString(reverseOn, heavyOn, true),0,0)
 
 end
